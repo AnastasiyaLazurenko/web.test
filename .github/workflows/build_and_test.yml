@@ -35,4 +35,4 @@ jobs:
         run: dotnet build TestProject_Calc/TestProject_Calc.csproj --configuration Release --no-restore
         
       - name: Tests - Run
-        run: dotnet test TestProject_Calc/TestProject_Calc.sln --configuration Release --no-restore --verbosity Minimal
+        run: dotnet test TestProject_Calc/TestProject_Calc.csproj --configuration Release --no-restore --verbosity Minimal
