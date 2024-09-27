@@ -34,24 +34,7 @@ namespace WebSite.Controllers
                 return Ok();
             }
 
-            // *********************************************
-            if (Users.Names.Any(x => x.ToLower() == dto.Login.ToLower()))
-            {
-                return NotFound("Incorrect password!");
-            }
-
-            if (Users.Passwords.Any(x => x == dto.Password))
-            {
-                return NotFound("Incorrect user name!");
-            }
-
-            if (Users.Names.All(x => x.ToLower() != dto.Login.ToLower()))
-            {
-                return NotFound("User not found!");
-            }
-            // *********************************************
-
-            return NotFound("Incorrect user name or password!");
+            return NotFound("Your username or password is incorrect");
         }
     }
 }
