@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium;
 using System.Collections;
 
 namespace TestProject_Calc
@@ -23,7 +24,9 @@ namespace TestProject_Calc
         [OneTimeSetUp]
         public void SetUpDriver()
         {
-            _driver = new ChromeDriver();
+            var options = new ChromeOptions();
+            options.AddArgument("--headless");
+            _driver = new ChromeDriver(options);
             _loginPage = new LoginPage(_driver);
         }
 
