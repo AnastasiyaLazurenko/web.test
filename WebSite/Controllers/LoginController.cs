@@ -34,6 +34,21 @@ namespace WebSite.Controllers
                 return Ok();
             }
 
+            if (string.IsNullOrEmpty(dto.Login?.Trim()) && string.IsNullOrEmpty(dto.Password))
+            {
+                return NotFound("Please enter your user name and password");
+            }
+
+            if (string.IsNullOrEmpty(dto.Login?.Trim()))
+            {
+                return NotFound("Please enter your user name");
+            }
+
+            if (string.IsNullOrEmpty(dto.Password))
+            {
+                return NotFound("Please enter your password");
+            }
+
             return NotFound("Your username or password is incorrect");
         }
     }
