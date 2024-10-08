@@ -11,9 +11,8 @@ namespace TestProject_Calc
         public void SetUpDriver()
         {
             var options = new ChromeOptions();
-            //options.AddArgument("--headless");
-            //_driver = new ChromeDriver(options);
-            _driver = new ChromeDriver();
+            options.AddArgument("--headless");
+            _driver = new ChromeDriver(options);
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             _driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(90);
             _loginPage = new LoginPage(_driver);
@@ -35,7 +34,10 @@ namespace TestProject_Calc
         [TestCase("test", "newyork1")]
         public void Login_InsertValidValue_LoginOccurs(string login, string password)
         {
+            TestContext.Error.WriteLine($"Start loading the page");
             _loginPage.EnterCredentialsAndLogin(login, password);
+            TestContext.Error.WriteLine(_driver.Url);
+
             Assert.That(_driver.Url, Is.EqualTo(CalculatorPage.URL), "The calculator page was not opened");
         }
 
