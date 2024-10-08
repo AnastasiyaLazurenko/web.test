@@ -34,24 +34,22 @@ namespace WebSite.Controllers
                 return Ok();
             }
 
-            // *********************************************
-            if (Users.Names.Any(x => x.ToLower() == dto.Login.ToLower()))
+            if (string.IsNullOrEmpty(dto.Login?.Trim()) && string.IsNullOrEmpty(dto.Password))
             {
-                return NotFound("Incorrect password!");
+                return NotFound("Please enter your user name and password");
             }
 
-            if (Users.Passwords.Any(x => x == dto.Password))
+            if (string.IsNullOrEmpty(dto.Login?.Trim()))
             {
-                return NotFound("Incorrect user name!");
+                return NotFound("Please enter your user name");
             }
 
-            if (Users.Names.All(x => x.ToLower() != dto.Login.ToLower()))
+            if (string.IsNullOrEmpty(dto.Password))
             {
-                return NotFound("User not found!");
+                return NotFound("Please enter your password");
             }
-            // *********************************************
 
-            return NotFound("Incorrect user name or password!");
+            return NotFound("Your username or password is incorrect");
         }
     }
 }
