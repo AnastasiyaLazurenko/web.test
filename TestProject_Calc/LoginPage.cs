@@ -19,8 +19,6 @@ namespace TestProject_Calc
 
         public void ClickLogin() => LoginButtonLocator.Click();
 
-        //public string? ErrorMessageText => driver.FindElements(ErrorLocator).FirstOrDefault()?.Text;
-
         public string ErrorMessageText => driver.FindElement(ErrorLocator).Text;
 
         public void EnterCredentialsAndLogin(string login, string password)

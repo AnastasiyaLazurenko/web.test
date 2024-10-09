@@ -16,7 +16,6 @@ namespace TestProject_Calc
             options.AddArgument("--headless");
             _driver = new ChromeDriver(options);
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            _driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
             _loginPage = new LoginPage(_driver);
         }
 
@@ -38,7 +37,7 @@ namespace TestProject_Calc
         public void Login_InsertValidValue_LoginOccurs(string login, string password)
         {
             _loginPage.EnterCredentialsAndLogin(login, password);
-            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(40));
+            WebDriverWait wait = new(_driver, TimeSpan.FromSeconds(40));
             wait.Until(ExpectedConditions.UrlContains(CalculatorPage.URL));
 
             Assert.That(_driver.Url, Is.EqualTo(CalculatorPage.URL), "The calculator page was not opened");
