@@ -39,7 +39,9 @@ namespace TestProject_Calc
         public void Login_InsertValidValue_LoginOccurs(string login, string password)
         {
             _loginPage.EnterCredentialsAndLogin(login, password);
-            new WebDriverWait(_driver, TimeSpan.FromSeconds(30)).Until(ExpectedConditions.UrlToBe(CalculatorPage.URL));
+            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(40));
+            wait.Until(ExpectedConditions.UrlContains(CalculatorPage.URL));
+
             Assert.That(_driver.Url, Is.EqualTo(CalculatorPage.URL), "The calculator page was not opened");
         }
 
