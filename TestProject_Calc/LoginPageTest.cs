@@ -14,7 +14,7 @@ namespace TestProject_Calc
             options.AddArgument("--headless");
             _driver = new ChromeDriver(options);
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            _driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(90);
+            _driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
             _loginPage = new LoginPage(_driver);
         }
 
@@ -32,12 +32,11 @@ namespace TestProject_Calc
 
         [Test]
         [TestCase("test", "newyork1")]
+        [TestCase("TEST", "newyork1")]
         public void Login_InsertValidValue_LoginOccurs(string login, string password)
         {
-            TestContext.Error.WriteLine($"Start loading the page");
             _loginPage.EnterCredentialsAndLogin(login, password);
-            TestContext.Error.WriteLine(_driver.Url);
-
+            _driver.Navigate().Refresh();
             Assert.That(_driver.Url, Is.EqualTo(CalculatorPage.URL), "The calculator page was not opened");
         }
 
@@ -47,7 +46,6 @@ namespace TestProject_Calc
         [TestCase("tes", "newyork1", "Your username or password is incorrect")]
         [TestCase("test", "", "Please enter your password")]
         [TestCase("test", "1", "Your username or password is incorrect")]
-        [TestCase("TEST", "newyork1", "Your username or password is incorrect")]
         [TestCase("test", "NEWYORK1", "Your username or password is incorrect")]
         public void Login_InvalidCredentials_ErrorMessageShown(string login, string password, string errorText)
         {

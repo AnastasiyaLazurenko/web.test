@@ -27,10 +27,7 @@ namespace TestProject_Calc
         {
             InsertLoginValue(login);
             InsertPasswordValue(password);
-            TestContext.Error.WriteLine($"Values were added");
-
             ClickLogin();
-            TestContext.Error.WriteLine($"Click login");
         }
     }
 }
