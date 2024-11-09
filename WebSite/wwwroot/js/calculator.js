@@ -15,8 +15,8 @@ GetValue = function (id, float) {
 
     [...input.value].forEach(c => text += isDigit(c, float) ? c : '');
     text = pattern.test(text) ? text : '0';
+    input.value = text.replace(/^0*(\d+(\.\d{0,2})?)$/, '$1');
 
-    input.value = text;
     return input.value;
 }
 
