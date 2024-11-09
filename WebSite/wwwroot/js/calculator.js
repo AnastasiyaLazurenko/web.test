@@ -192,8 +192,10 @@ function SetCalculateButtonState() {
     var amount = Number(document.getElementById('amount').value);
     var days = Number(document.getElementById('term').value);
     var percent = Number(document.getElementById('percent').value);
+    var year360 = document.querySelector('#finYear360').checked;
+    var year365 = document.querySelector('#finYear365').checked;
 
-    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0);
+    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0 || (!year360 && !year365));
 }
 
 async function Calculate() {
