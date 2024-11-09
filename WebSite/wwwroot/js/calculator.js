@@ -1,5 +1,5 @@
 ﻿VerifyNumber = function (id, min, max) {
-    var value = Number(document.getElementById(id).value);
+    var value = Number(GetValue(id, true));
 
     if (isNaN(value) || value < min || value > max) {
         document.getElementById(id).value = "0";
@@ -8,10 +8,24 @@
     SetCalculateButtonState();
 }
 
+GetValue = function (id, float) {
+    var input = document.getElementById(id);
+    var text = '';
+    var pattern = float ? /^\d+(\.\d{0,2})?$/ : /\d*/;
+
+    [...input.value].forEach(c => text += isDigit(c, float) ? c : '');
+    text = pattern.test(text) ? text : '0';
+
+    input.value = text;
+    return input.value;
+}
+
+isDigit = function (c, float) { return (float && c === '.') || c >= '0' && c <= '9' }
+
 VerifyTerm = function (id, min) {
     //var max = document.querySelector('#finYear input').checked ? 365 : 360;
     var max = 366;
-    var value = Number(document.getElementById(id).value);
+    var value = Number(GetValue(id), false);
 
     if (!Number.isInteger(value) || isNaN(value) || value < min || value > max) {
         document.getElementById(id).value = "0";
