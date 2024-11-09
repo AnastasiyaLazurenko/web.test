@@ -216,7 +216,7 @@ async function Calculate() {
     return Promise.resolve('done');
 }
 
-SetYear = function (year) {
+ClearYear = function (year) {
     if (year == 365) {
         document.querySelector('#finYear td:nth-child(2) input').checked = false;
     } else {
