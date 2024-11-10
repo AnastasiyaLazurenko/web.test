@@ -1,6 +1,6 @@
 ﻿namespace WebSite.Models
 {
-    public class SaveHistoryDto
+    public class CalculatorValues
     {
         public string Login { get; set; }
         public string Amount { get; set; }
