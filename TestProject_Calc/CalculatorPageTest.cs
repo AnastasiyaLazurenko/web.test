@@ -11,10 +11,9 @@ namespace TestProject_Calc
         [OneTimeSetUp]
         public void SetUpDriver()
         {
-            // var options = new ChromeOptions();
-            // options.AddArgument("--headless");
-            // driver = new ChromeDriver(options);
-            driver = new ChromeDriver(); //!!
+            var options = new ChromeOptions();
+            options.AddArgument("--headless");
+            driver = new ChromeDriver(options);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
             calculatorPage = new CalculatorPage(driver);
@@ -36,23 +35,18 @@ namespace TestProject_Calc
         [TestCase(100000, 0.01, 1, "1", Month.January, 2010, FinancialYearInput.full)]
         [TestCase(100000, 0.01, 365, "28", Month.February, 2011, FinancialYearInput.full)]
         [TestCase(100000, 99.99, 1, "20", Month.March, 2012, FinancialYearInput.part)]
-
         [TestCase(100000, 99.99, 360, "21", Month.April, 2013, FinancialYearInput.part)]
         [TestCase(100000, 100, 1, "11", Month.May, 2014, FinancialYearInput.part)]
         [TestCase(100000, 100, 360, "5", Month.June, 2015, FinancialYearInput.part)]
-
         [TestCase(99999.99, 0.01, 1, "3", Month.July, 2016, FinancialYearInput.full)]
         [TestCase(99999.99, 0.01, 365, "31", Month.August, 2017, FinancialYearInput.full)]
         [TestCase(99999.99, 99.99, 1, "30", Month.September, 2018, FinancialYearInput.part)]
-
         [TestCase(99999.99, 99.99, 360, "1", Month.October, 2019, FinancialYearInput.part)]
         [TestCase(99999.99, 100, 1, "29", Month.November, 2020, FinancialYearInput.full)]
         [TestCase(99999.99, 100, 365, "4", Month.December, 2021, FinancialYearInput.full)]
-
         [TestCase(0.01, 0.01, 1, "1", Month.May, 2029, FinancialYearInput.part)]
         [TestCase(0.01, 0.01, 360, "1", Month.May, 2028, FinancialYearInput.part)]
         [TestCase(0.01, 99.99, 1, "1", Month.May, 2027, FinancialYearInput.part)]
-
         [TestCase(0.01, 99.99, 360, "1", Month.May, 2026, FinancialYearInput.part)]
         [TestCase(0.01, 100, 1, "1", Month.May, 2025, FinancialYearInput.full)]
         [TestCase(0.01, 100, 365, "29", Month.February, 2024, FinancialYearInput.full)]
