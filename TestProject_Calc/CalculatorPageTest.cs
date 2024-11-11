@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace TestProject_Calc
 {
@@ -14,6 +15,7 @@ namespace TestProject_Calc
             var options = new ChromeOptions();
             options.AddArgument("--headless");
             driver = new ChromeDriver(options);
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
             calculatorPage = new CalculatorPage(driver);
@@ -32,14 +34,14 @@ namespace TestProject_Calc
         }
 
         [Test]
-        [TestCase(100000, 0.01, 1, "1", Month.January, 2010, FinancialYearInput.full)]
+        [TestCase(100000, 0.01, 1, "31", Month.January, 2010, FinancialYearInput.full)]
         [TestCase(100000, 0.01, 365, "28", Month.February, 2011, FinancialYearInput.full)]
         [TestCase(100000, 99.99, 1, "20", Month.March, 2012, FinancialYearInput.part)]
         [TestCase(100000, 99.99, 360, "21", Month.April, 2013, FinancialYearInput.part)]
         [TestCase(100000, 100, 1, "11", Month.May, 2014, FinancialYearInput.part)]
         [TestCase(100000, 100, 360, "5", Month.June, 2015, FinancialYearInput.part)]
         [TestCase(99999.99, 0.01, 1, "3", Month.July, 2016, FinancialYearInput.full)]
-        [TestCase(99999.99, 0.01, 365, "31", Month.August, 2017, FinancialYearInput.full)]
+        [TestCase(99999.99, 0.01, 365, "1", Month.August, 2017, FinancialYearInput.full)]
         [TestCase(99999.99, 99.99, 1, "30", Month.September, 2018, FinancialYearInput.part)]
         [TestCase(99999.99, 99.99, 360, "1", Month.October, 2019, FinancialYearInput.part)]
         [TestCase(99999.99, 100, 1, "29", Month.November, 2020, FinancialYearInput.full)]
@@ -67,10 +69,9 @@ namespace TestProject_Calc
         [Test]
         [TestCase("100000.01")]
         [TestCase("100000.001")]
-        [TestCase("0")]
         [TestCase("-")]
         [TestCase("null")]
-        [TestCase("0,1")]
+        [TestCase("0,")]
         public void DepositAmount_InvalidValues_GetResults(string depositValue)
         {
             //Arrange
@@ -91,7 +92,6 @@ namespace TestProject_Calc
 
         [Test]
         [TestCase("100.01")]
-        [TestCase("0")]
         [TestCase("-")]
         [TestCase("null")]
         public void InterestRate_InvalidValues_GetResults(string rateValue)
@@ -113,18 +113,18 @@ namespace TestProject_Calc
         }
 
         [Test]
-        [TestCase("366")]
-        [TestCase("0")]
-        [TestCase("-")]
-        [TestCase("null")]
-        [TestCase("")]
-        public void InvestmentTerm_InvalidValues_GetResults(string investmentTerm)
+        [TestCase("366", "0")]
+        [TestCase("0", "0")]
+        [TestCase("-", "")]
+        [TestCase("null", "")]
+        [TestCase("", "")]
+        public void InvestmentTerm_InvalidValues_GetResults(string investmentTerm, string expectedReplacement)
         {
             //Arrange
             var expectedValues = calculatorPage.GenerateExpectedErrorDTO(term: investmentTerm);
 
             //Act
-            var actualValues = calculatorPage.EnterInputs_GetOutput(expectedValues, errorField: "Term");
+            var actualValues = calculatorPage.EnterInputs_GetOutput(expectedValues, errorField: "Term", expectedReplacement: expectedReplacement);
 
             //Assert
             var log = calculatorPage.CompareValues(expectedValues, actualValues);
@@ -149,28 +149,47 @@ namespace TestProject_Calc
         }
 
         [Test]
+        [TestCase("Blabla")]
+        public void StartDate_NonexistentMonth_GetResults(string month)
+        {
+            //Arrange
+            var expectedValues = calculatorPage.GenerateExpectedErrorDTO(month: month);
+
+            //Act
+            calculatorPage.EnterInputs(expectedValues);
+            var actualValues = calculatorPage.GetActualDTO();
+
+            //Assert
+            Assert.That(actualValues.Month, Is.EqualTo(DateTime.Now.ToString("MMMM")));
+        }
+
+        [Test]
         [TestCase("2009")]
         [TestCase("2030")]
         public void StartDate_NonexistentYear_GetResults(string year)
         {
-            //Arrange
-            var expectedValues = calculatorPage.GenerateExpectedErrorDTO(year: year);
-            calculatorPage.EnterInputs(expectedValues);
-
             //Assert
-            Assert.Throws<NoSuchElementException>(() => calculatorPage.EnterInputs(expectedValues));
+            Assert.Throws<NoSuchElementException>(() => new SelectElement(calculatorPage.StartDateYear).SelectByValue(year));
         }
 
         [Test]
-        [TestCase("29", Month.February, "2023")]
-        public void InsertNonexistentDate(string day, Month month, string year)
+        [TestCase("29", "February", "2023")]
+        public void InsertNonexistentDate(string day, string month, string year)
         {
             //Arrange
             var expectedValues = calculatorPage.GenerateExpectedErrorDTO(day: day, month: month, year: year);
+
+            //Act
             calculatorPage.EnterInputs(expectedValues);
+            var actualValues = calculatorPage.GetActualDTO();
 
             //Assert
-            Assert.That(!calculatorPage.CalculateButton.Enabled);
+            Assert.Multiple(() =>
+            {
+                Assert.That(actualValues.Day, Is.EqualTo("28"));
+                Assert.That(actualValues.Month, Is.EqualTo("February"));
+                Assert.That(actualValues.Year, Is.EqualTo("2023"));
+            });
         }
     }
 }

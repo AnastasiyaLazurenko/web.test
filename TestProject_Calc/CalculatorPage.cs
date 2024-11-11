@@ -13,9 +13,9 @@ namespace TestProject_Calc
         private IWebElement InvestmentTermField => driver.FindElement(By.XPath("//input[@id='term']"));
         private IWebElement StartDateDay => driver.FindElement(By.XPath("//select[@id='day']"));
         private IWebElement StartDateMonth => driver.FindElement(By.XPath("//select[@id='month']"));
-        private IWebElement StartDateYear => driver.FindElement(By.XPath("//select[@id='year']"));
-        private IWebElement RadioButton360 => driver.FindElement(By.XPath("//input[@onchange='SetYear(365)']")); //!!
-        private IWebElement RadioButton365 => driver.FindElement(By.XPath("//input[@onchange='SetYear(360)']")); //!!
+        public IWebElement StartDateYear => driver.FindElement(By.XPath("//select[@id='year']"));
+        private IWebElement RadioButton360 => driver.FindElement(By.XPath("//input[@id='finYear360']"));
+        private IWebElement RadioButton365 => driver.FindElement(By.XPath("//input[@id='finYear365']"));
         public IWebElement CalculateButton => driver.FindElement(By.XPath("//button[@id='calculateBtn']"));
         private IWebElement InteresetEarnedField => driver.FindElement(By.XPath("//input[@id='interest']"));
         private IWebElement IncomeField => driver.FindElement(By.XPath("//input[@id='income']"));
@@ -70,17 +70,17 @@ namespace TestProject_Calc
             return inputData;
         }
 
-        public CalculatorValues ChangeExpectedDTO(CalculatorValues inputData, string errorField)
+        public CalculatorValues ChangeExpectedDTO(CalculatorValues inputData, string errorField, string expectedReplacement)
         {
             foreach (var property in calculatorProperty.Where(w => w.Name == errorField))
             {
-                if (property.GetValue(inputData) != "") property.SetValue(inputData, "0");
+                property.SetValue(inputData, expectedReplacement);
             }
 
             return inputData;
         }
 
-        public CalculatorValues GenerateExpectedErrorDTO(string depositValue = "1", string rateValue = "1", string term = "1", string day = "1", Month month = Month.January, string year = "2014", FinancialYearInput? financialYear = FinancialYearInput.full)
+        public CalculatorValues GenerateExpectedErrorDTO(string depositValue = "1", string rateValue = "1", string term = "1", string day = "1", string month = "January", string year = "2014", FinancialYearInput? financialYear = FinancialYearInput.full)
         {
             var inputData = new CalculatorValues
             {
@@ -88,7 +88,7 @@ namespace TestProject_Calc
                 RateValue = rateValue,
                 Term = term,
                 Day = day,
-                Month = month.ToString(),
+                Month = month,
                 Year = year,
                 FinancialYear = financialYear,
                 InteresetEarned = "0.00",
@@ -99,12 +99,12 @@ namespace TestProject_Calc
             return inputData;
         }
 
-        public CalculatorValues EnterInputs_GetOutput(CalculatorValues inputData, string errorField = "")
+        public CalculatorValues EnterInputs_GetOutput(CalculatorValues inputData, string errorField = "", string expectedReplacement = "0")
         {
             EnterInputs(inputData);
 
             if (String.IsNullOrEmpty(errorField)) ClickCalculate();
-            else ChangeExpectedDTO(inputData, errorField);
+            else ChangeExpectedDTO(inputData, errorField, expectedReplacement);
 
             return GetActualDTO();
         }
