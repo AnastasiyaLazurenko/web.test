@@ -113,15 +113,16 @@ namespace TestProject_Calc
         }
 
         [Test]
-        [TestCase("366", "0")]
-        [TestCase("0", "0")]
-        [TestCase("-", "")]
-        [TestCase("null", "")]
-        [TestCase("", "")]
-        public void InvestmentTerm_InvalidValues_GetResults(string investmentTerm, string expectedReplacement)
+        [TestCase("366", "0", FinancialYearInput.full)]
+        [TestCase("361", "0", FinancialYearInput.part)]
+        [TestCase("0", "0", FinancialYearInput.full)]
+        [TestCase("-", "", FinancialYearInput.full)]
+        [TestCase("null", "", FinancialYearInput.full)]
+        [TestCase("", "", FinancialYearInput.full)]
+        public void InvestmentTerm_InvalidValues_GetResults(string investmentTerm, string expectedReplacement, FinancialYearInput financialYear)
         {
             //Arrange
-            var expectedValues = calculatorPage.GenerateExpectedErrorDTO(term: investmentTerm);
+            var expectedValues = calculatorPage.GenerateExpectedErrorDTO(term: investmentTerm, financialYear: financialYear);
 
             //Act
             var actualValues = calculatorPage.EnterInputs_GetOutput(expectedValues, errorField: "Term", expectedReplacement: expectedReplacement);
@@ -177,18 +178,13 @@ namespace TestProject_Calc
         public void InsertNonexistentDate(string day, string month, string year)
         {
             //Arrange
-            var expectedValues = calculatorPage.GenerateExpectedErrorDTO(day: day, month: month, year: year);
-
-            //Act
-            calculatorPage.EnterInputs(expectedValues);
-            var actualValues = calculatorPage.GetActualDTO();
+            calculatorPage.InsertStartDateYear(year);
+            calculatorPage.InsertStartDateMonth(month);
 
             //Assert
             Assert.Multiple(() =>
             {
-                Assert.That(actualValues.Day, Is.EqualTo("28"));
-                Assert.That(actualValues.Month, Is.EqualTo("February"));
-                Assert.That(actualValues.Year, Is.EqualTo("2023"));
+                Assert.Throws<NoSuchElementException>(() => calculatorPage.InsertStartDateDay(day));
             });
         }
     }

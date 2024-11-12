@@ -114,9 +114,9 @@ namespace TestProject_Calc
             InsertDepositAmmount(inputData.DepositValue);
             InsertRateOfInterest(inputData.RateValue);
             InsertInvestmentTerm(inputData.Term);
-            InsertStartDateDay(inputData.Day);
-            InsertStartDateMonth(inputData.Month);
             InsertStartDateYear(inputData.Year);
+            InsertStartDateMonth(inputData.Month);
+            InsertStartDateDay(inputData.Day);
             ChoseFinancialYear(inputData.FinancialYear);
         }
 
