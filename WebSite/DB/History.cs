@@ -8,10 +8,10 @@ namespace WebSite.DB
     {
         public static void Clear(string login) => DB.Execute($"DELETE FROM History WHERE Login = '{login}'");
 
-        public static List<SaveHistoryDto> Get(string login) =>
+        public static List<CalculatorValues> Get(string login) =>
             DB
                 .GetRows($"SELECT Amount, Percent, Year, StartDate, EndDate, Days, Interest, Income FROM History WHERE Login = '{login}'")
-                .Select(x => new SaveHistoryDto
+                .Select(x => new CalculatorValues
                 {
                     Login = login,
                     Amount = x[0],
@@ -25,7 +25,7 @@ namespace WebSite.DB
                 })
                 .ToList();
 
-        public static void Add(SaveHistoryDto dto)
+        public static void Add(CalculatorValues dto)
         {
             DB.Execute($"INSERT INTO History VALUES " +
                        $"('{dto.Login}', '{dto.Amount}', '{dto.Percent}', '{dto.Year}', '{dto.StartDate}', '{dto.EndDate}', {dto.Days}, '{dto.Interest.ParseNumber(dto.Login)}', '{dto.Income.ParseNumber(dto.Login)}')");

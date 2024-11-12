@@ -43,7 +43,7 @@ namespace WebSite.Controllers
         }
 
         [HttpPost("save")]
-        public ActionResult Save([FromBody] SaveHistoryDto dto)
+        public ActionResult Save([FromBody] CalculatorValues dto)
         {
             History.Add(dto);
             return Ok();
