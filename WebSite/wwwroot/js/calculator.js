@@ -23,7 +23,7 @@ GetValue = function (id, float) {
 isDigit = function (c, float) { return (float && c === '.') || c >= '0' && c <= '9' }
 
 VerifyTerm = function (id, min) {
-    var max = document.querySelector('#finYear input').checked ? 365 : 360;
+    var max = document.querySelector('#finYear360').checked ? 360 : 365;
     var value = Number(GetValue(id), false);
 
     if (!Number.isInteger(value) || isNaN(value) || value < min || value > max) {
