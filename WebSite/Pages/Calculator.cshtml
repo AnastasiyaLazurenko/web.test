@@ -36,8 +36,8 @@
                     </tr>
                     <tr id="finYear">
                         <td>Financial Year: *</td>
-                    <td><input type="radio" onchange="SetCalculateButtonState(); ClearYear(360)" id="finYear365">365 days</td>
-                    <td><input type="radio" onchange="SetCalculateButtonState(); ClearYear(365)" id="finYear360">360 days</td>
+                    <td><input type="radio" onchange="SetCalculateButtonState(); ClearYear(360); VerifyTerm('term', 0);" id="finYear365">365 days</td>
+                    <td><input type="radio" onchange="SetCalculateButtonState(); ClearYear(365); VerifyTerm('term', 0);" id="finYear360">360 days</td>
                     </tr>
                     <tr>
                         <td></td>
