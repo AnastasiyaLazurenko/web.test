@@ -1,4 +1,6 @@
-﻿namespace TestProject_Calc
+﻿using TestProject_Calc.Pages;
+
+namespace TestProject_Calc.Helpers
 {
     public class CalculatorValues
     {

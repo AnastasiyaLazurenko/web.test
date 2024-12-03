@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace TestProject_Calc
+namespace TestProject_Calc.Pages
 {
     public class LoginPage(ChromeDriver driver)
 
