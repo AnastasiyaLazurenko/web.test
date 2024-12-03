@@ -1,5 +1,5 @@
 ﻿VerifyNumber = function (id, min, max) {
-    var value = Number(document.getElementById(id).value);
+    var value = Number(GetValue(id, true));
 
     if (isNaN(value) || value < min || value > max) {
         document.getElementById(id).value = "0";
@@ -8,10 +8,23 @@
     SetCalculateButtonState();
 }
 
+GetValue = function (id, float) {
+    var input = document.getElementById(id);
+    var text = '';
+    var pattern = float ? /^\d+(\.\d{0,2})?$/ : /\d*/;
+
+    [...input.value].forEach(c => text += isDigit(c, float) ? c : '');
+    text = pattern.test(text) ? text : '0';
+    input.value = text.replace(/^0*(\d+(\.\d{0,2})?)$/, '$1');
+
+    return input.value;
+}
+
+isDigit = function (c, float) { return (float && c === '.') || c >= '0' && c <= '9' }
+
 VerifyTerm = function (id, min) {
-    //var max = document.querySelector('#finYear input').checked ? 365 : 360;
-    var max = 366;
-    var value = Number(document.getElementById(id).value);
+    var max = document.querySelector('#finYear360').checked ? 360 : 365;
+    var value = Number(GetValue(id), false);
 
     if (!Number.isInteger(value) || isNaN(value) || value < min || value > max) {
         document.getElementById(id).value = "0";
@@ -21,17 +34,13 @@ VerifyTerm = function (id, min) {
 }
 
 Date.prototype.yyyymmdd = function () {
-    // December 32
-    //var dd = this.getDate();
+    var dd = this.getDate();
     var mm = this.getMonth() + 1;
-    var dd = this.getDate() + 1;
     return [(dd > 9 ? '' : '0') + dd, (mm > 9 ? '' : '0') + mm, this.getFullYear()].join('/');
 };
 
 CalculateDate = function () {
-    // December 32
-    //var day = document.getElementById('day').selectedIndex + 1;
-    var day = document.getElementById('day').selectedIndex;
+    var day = document.getElementById('day').selectedIndex + 1;
     var month = document.getElementById('month').selectedIndex;
     var year = document.getElementById('year').value;
     var days = Number(document.getElementById('term').value);
@@ -88,10 +97,8 @@ async function ResetMonth() {
             SetDay(day < 31 ? day : 30);
             break;
         default:
-            //AddOptions('day', 1, leapYear ? 29 : 28);
-            //SetDay(day <= (leapYear ? 29 : 28) ? day : (leapYear ? 29 : 28));
-            AddOptions('day', 1, 28);
-            SetDay(day < 29 ? day : 28);
+            AddOptions('day', 1, leapYear ? 29 : 28);
+            SetDay(day <= (leapYear ? 29 : 28) ? day : (leapYear ? 29 : 28));
             break;
     }
 
@@ -192,8 +199,10 @@ function SetCalculateButtonState() {
     var amount = Number(document.getElementById('amount').value);
     var days = Number(document.getElementById('term').value);
     var percent = Number(document.getElementById('percent').value);
+    var year360 = document.querySelector('#finYear360').checked;
+    var year365 = document.querySelector('#finYear365').checked;
 
-    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0);
+    document.getElementById('calculateBtn').disabled = (amount == 0 || days == 0 || percent == 0 || (!year360 && !year365));
 }
 
 async function Calculate() {
@@ -214,7 +223,7 @@ async function Calculate() {
     return Promise.resolve('done');
 }
 
-SetYear = function (year) {
+ClearYear = function (year) {
     if (year == 365) {
         document.querySelector('#finYear td:nth-child(2) input').checked = false;
     } else {
@@ -240,8 +249,3 @@ SetCurrentDate();
 SetNumber('interest', 0);
 SetNumber('income', 0);
 SetEndDate(new Date());
-
-// disable all controls
-$("input").attr("disabled", true);
-$("select").attr("disabled", true);
-$("button").attr("disabled", true);
