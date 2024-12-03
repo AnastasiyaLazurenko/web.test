@@ -175,7 +175,7 @@ namespace TestProject_Calc.Pages
                 var input = prop.GetValue(inputData);
                 var output = prop.GetValue(outputData);
 
-                if (!input.Equals(output))
+                if (input is not null && !input.Equals(output))
                 {
                     consoleLog += $"In the {prop.Name} field: expected {input}, actual {output} \n";
                 }
