@@ -52,30 +52,6 @@ namespace TestProject_Calc.Pages
 
         public void ClickCalculate() => CalculateButton.Click();
 
-        public CalculatorValues GenerateInputOLD(decimal depositValue = 1, decimal rateValue = 1, int term = 1, int day = 1, Month month = Month.January, int year = 2014, FinancialYearInput financialYear = FinancialYearInput.full)
-        {
-            decimal expectedInteresetEarned = Math.Round(depositValue * rateValue / 100 * term / (int)financialYear, 2);
-            decimal expectedIncome = depositValue + expectedInteresetEarned;
-            DateTime startDate = new(year, (int)month, day);
-            var expectedEndDate = startDate.AddDays(term).ToString("dd/MM/yyyy");
-
-            var inputData = new CalculatorValues
-            {
-                DepositValue = depositValue.ToString(),
-                RateValue = rateValue.ToString(),
-                Term = term.ToString(),
-                Day = day.ToString(),
-                Month = month.ToString(),
-                Year = year.ToString(),
-                FinancialYear = financialYear,
-                InteresetEarned = expectedInteresetEarned.ToString("##,0.00"),
-                Income = expectedIncome.ToString("##,0.00"),
-                EndDate = expectedEndDate.ToString()
-            };
-
-            return inputData;
-        }
-
         public CalculatorValues ChangeExpectedDTO(CalculatorValues inputData, string errorField, string expectedReplacement)
         {
             foreach (var property in calculatorProperty.Where(w => w.Name == errorField))
